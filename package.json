@@ -1,0 +1,19 @@
+{
+  "name": "dynamiccharttest",
+  "version": "1.0.0",
+  "description": "Testing dynamic charting stuff",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lafferjm/DynamicChartTest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lafferjm/DynamicChartTest/issues"
+  },
+  "homepage": "https://github.com/lafferjm/DynamicChartTest#readme"
+}
