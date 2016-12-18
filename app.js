@@ -39,24 +39,27 @@ sequelize.sync()
              console.log('Table created!');
          }, function(err) {
              console.log('An error occurred while creating the table: ', err);
+         })
+         .then(function() {
+            Color.count().then(function(colorCount) {
+                if(colorCount == 0) {
+                    Color.bulkCreate([
+                        {color: "Red", count: 12},
+                        {color: "Blue", count: 19},
+                        {color: "Yellow", count: 3},
+                        {color: "Green", count: 5},
+                        {color: "Purple", count: 2},
+                        {color: "Orange", count: 3}
+                    ]).then(function() {
+                        return Color.findAll();
+                    }).then(function(colors) {
+                        //console.log(colors);
+                     });
+                }
+            });
          });
 
-Color.count().then(function(colorCount) {
-    if(colorCount == 0) {
-        Color.bulkCreate([
-            {color: "Red", count: 12},
-            {color: "Blue", count: 19},
-            {color: "Yellow", count: 3},
-            {color: "Green", count: 5},
-            {color: "Purple", count: 2},
-            {color: "Orange", count: 3}
-        ]).then(function() {
-            return Color.findAll();
-        }).then(function(colors) {
-            //console.log(colors);
-        });
-    }
-});
+
 
 //Set the templating engine to embedded javascript and enable partials.
 app.set('view engine', 'ejs');
