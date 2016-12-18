@@ -7,7 +7,7 @@ export class Tools {
 
     public randomColor() {
         let date = new Date();
-        let randomGenerator = seedrandom(date.getTime(), {entropy: true});
+        let randomGenerator = seedrandom(String(date.getTime()), {entropy: true});
 
         let red = 0;
         let green = 0;
