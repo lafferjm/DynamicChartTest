@@ -4,14 +4,13 @@
 var seedrandom = require('seedrandom');
 
 module.exports = {
-    randomColor: function(alphaChannel) {
+    randomColor: function() {
         var date = new Date();
         var rng = seedrandom(date.getTime(), {entropy: true});
         
         var red = 0;
         var green = 0;
         var blue = 0;
-        var alpha = alphaChannel;
 
         var fillColor = '';
         var borderColor = '';
