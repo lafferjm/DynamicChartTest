@@ -28,6 +28,7 @@
     "express-partials": "^0.3.0",
     "seedrandom": "^2.4.2",
     "sequelize": "^3.27.0",
-    "sqlite3": "^3.1.8"
+    "sqlite3": "^3.1.8",
+    "typeorm": "0.0.5"
   }
 }
