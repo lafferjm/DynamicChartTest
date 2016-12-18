@@ -6,6 +6,40 @@ var app = express();
 //Express partials is needed so that a layout.ejs file can be used.
 var partials = require('express-partials');
 
+//Initialize sqlite, and get database handle.
+var sqlite3 = require('sqlite3').verbose();
+var database = new sqlite3.Database('test.db');
+
+var needsSetup = true;
+
+database.serialize(function() {
+    database.run("CREATE TABLE IF NOT EXISTS colors (" +
+                 "color TEXT NOT NULL," +
+                 "count INTEGER NOT NULL);");
+});
+
+database.all("SELECT COUNT(*) FROM colors;", function(error, rows) {
+    var count = rows[0]["COUNT(*)"];
+
+    if(count > 0) {
+        needsSetup = false;
+    }
+    
+    if(error) {
+        console.log("Errors: " + error);
+    }
+});
+
+if(needsSetup) {
+    var statement = database.prepare("INSERT INTO colors VALUES (?, ?)");
+    statement.run("Red", 12);
+    statement.run("Blue", 19);
+    statement.run("Yellow", 3);
+    statement.run("Green", 5);
+    statement.run("Purple", 2);
+    statement.run("Orange", 3);
+}
+
 //This information will come from the database and
 //need to be put into array.  Might as well get started now.
 var dataArray = [];
