@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lafferjm/DynamicChartTest#readme",
   "dependencies": {
+    "@types/express": "^4.0.34",
     "body-parser": "^1.15.2",
     "chart.js": "^2.4.0",
     "ejs": "^2.5.5",
