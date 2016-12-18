@@ -1,4 +1,4 @@
-import * as seedrandom from 'seedrandom'
+import * as seedrandom from 'seedrandom';
 
 export class Tools {
     constructor() {

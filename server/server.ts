@@ -1,5 +1,5 @@
-import * as express from 'express'
-import expressPartial = require('express-partials')
+import * as express from 'express';
+import expressPartial = require('express-partials');
 
 export class ServerApp {
 
