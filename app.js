@@ -10,50 +10,51 @@ var partials = require('express-partials');
 var sql = require('sqlite3');
 var database = new sql.Database('test.db');
 
-database.run("CREATE TABLE IF NOT EXISTS colors (" +
-             "color TEXT NOT NULL," +
-             "count INTEGER NOT NULL);");
+//Create reference to the orm
+var Sequelize = require('sequelize');
 
-database.all("SELECT COUNT(*) FROM colors;", function(error, rows) {
-    var count = rows[0]["COUNT(*)"];
-
-    if(count == 0) {
-        var statement = database.prepare("INSERT INTO colors VALUES (?, ?)");
-        statement.run("Red", 12);
-        statement.run("Blue", 19);
-        statement.run("Yellow", 3);
-        statement.run("Green", 5);
-        statement.run("Purple", 2);
-        statement.run("Orange", 3);
-    }
-    
-    console.log("Count: " + count);
-
-    if(error) {
-        console.log("Errors: " + error);
-    }
+//Create reference to the database
+var sequelize = new Sequelize('colors', 'username', 'password', {
+    dialect: 'sqlite',
+    storage: './test.db'
 });
 
-//Will contain the values from the database containing color
-//and count
-var colorArray = [];
-var countArray = [];
-    
-//Will contain random values for drawing the bars
-var fillColorArray = [];
-var borderColorArray = [];
-    
-database.each("SELECT color, count FROM colors;", function(error, rows) {
-    var color = tools.randomColor();
+sequelize.authenticate()
+         .then(function(err) {
+             console.log('Connection has been established successfully.');
+         }, function(err) {
+             console.log('Unable to connect to the datbase:', err);
+         });
 
-    colorArray.push(rows.color);
-    countArray.push(rows.count);
+//Create a model to represent a color
+//Notice no id, it gets one by default
+var Color = sequelize.define('Color', {
+    color: Sequelize.STRING,
+    count: Sequelize.INTEGER
+});
 
-    fillColorArray.push(color[0]);
-    borderColorArray.push(color[1]);
+//Create the table in the database if it doesn't exist
+sequelize.sync()
+         .then(function(err) {
+             console.log('Table created!');
+         }, function(err) {
+             console.log('An error occurred while creating the table: ', err);
+         });
 
-    if(error) {
-        console.log(error);
+Color.count().then(function(colorCount) {
+    if(colorCount == 0) {
+        Color.bulkCreate([
+            {color: "Red", count: 12},
+            {color: "Blue", count: 19},
+            {color: "Yellow", count: 3},
+            {color: "Green", count: 5},
+            {color: "Purple", count: 2},
+            {color: "Orange", count: 3}
+        ]).then(function() {
+            return Color.findAll();
+        }).then(function(colors) {
+            //console.log(colors);
+        });
     }
 });
 
@@ -62,11 +63,35 @@ app.set('view engine', 'ejs');
 app.use(partials());
 
 app.get('/', function(req, res) {
-    //Send our fake data back to the client.
-    res.render('index', { labels: colorArray,
-                          data: countArray,
-                          fillColors: fillColorArray,
-                          borderColors: borderColorArray});
+    
+    //Will contain the values from the database containing color
+    //and count
+    var colorArray = [];
+    var countArray = [];
+    
+    //Will contain random values for drawing the bars
+    var fillColorArray = [];
+    var borderColorArray = [];
+    
+    Color.findAll()
+         .then(function(resultSet) {
+            resultSet.forEach(function(result) {
+                var color = tools.randomColor();
+
+                colorArray.push(result.color);
+                countArray.push(result.count);
+
+                fillColorArray.push(color[0]);
+                borderColorArray.push(color[1]);
+            });
+         })
+        .then(function() {
+            //Send our fake data back to the client.
+            res.render('index', { labels: colorArray,
+                                  data: countArray,
+                                  fillColors: fillColorArray,
+                                  borderColors: borderColorArray});
+        });
 });
 
 app.listen(3000, function() {
