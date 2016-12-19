@@ -13,6 +13,7 @@ export class ServerApp {
         this._App.set('views', '../views');
         this._App.use(expressPartial());
 
+        //Lame "Hack" to prepopulate the data if it doesn't exist
         let database = new Data();
 
     }
@@ -33,6 +34,8 @@ export class ServerApp {
         let fillColorArray: Array<string> = [];
         let borderColorArray: Array<string> = [];
         
+        //These didn't work as class variables, so had to implement
+        //lame work around.
         let database = new Data();
         let tools = new Tools();
 
