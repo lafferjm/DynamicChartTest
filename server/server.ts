@@ -33,13 +33,6 @@ export class ServerApp {
         let fillColorArray: Array<string> = [];
         let borderColorArray: Array<string> = [];
         
-        /*
-        colorArray.push("Red");
-        countArray.push(10);
-        fillColorArray.push('rgba(188, 125, 0, 0.2)');
-        borderColorArray.push('rgba(188, 125, 0, 1)');
-        */
-
         let database = new Data();
         let tools = new Tools();
 
