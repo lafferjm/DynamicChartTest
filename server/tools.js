@@ -5,7 +5,7 @@ var Tools = (function () {
     }
     Tools.prototype.randomColor = function () {
         var date = new Date();
-        var randomGenerator = seedrandom(date.getTime(), { entropy: true });
+        var randomGenerator = seedrandom(String(date.getTime()), { entropy: true });
         var red = 0;
         var green = 0;
         var blue = 0;
