@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var expressPartial = require("express-partials");
 var data_1 = require("./data");
 var tools_1 = require("./tools");
+var database = new data_1.Data();
 var ServerApp = (function () {
     function ServerApp() {
         this._App = express();
@@ -12,8 +13,6 @@ var ServerApp = (function () {
         this._App.use(expressPartial());
         this._App.use(bodyParser.json());
         this._App.use(bodyParser.urlencoded({ extended: true }));
-        //Lame "Hack" to prepopulate the data if it doesn't exist
-        var database = new data_1.Data();
     }
     ServerApp.prototype.setRoutes = function () {
         this._App.get('/', this._RenderChart);
@@ -31,7 +30,6 @@ var ServerApp = (function () {
         var borderColorArray = [];
         //These didn't work as class variables, so had to implement
         //lame work around.
-        var database = new data_1.Data();
         var tools = new tools_1.Tools();
         database.getAllData().forEach(function (item) {
             var color = tools.randomColor();
@@ -47,8 +45,7 @@ var ServerApp = (function () {
     };
     ServerApp.prototype._AddColor = function (req, res) {
         var color = req.body.name;
-        var count = req.body.amount;
-        var database = new data_1.Data();
+        var count = Number(req.body.amount);
         database.insertData(color, count);
         res.send(color + ' ' + count);
     };

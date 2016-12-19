@@ -4,6 +4,8 @@ import expressPartial = require('express-partials');
 import {Data} from './data';
 import {Tools} from './tools';
 
+var database = new Data();
+
 export class ServerApp {
 
     private _App: express.Express;
@@ -15,9 +17,6 @@ export class ServerApp {
         this._App.use(expressPartial());
         this._App.use(bodyParser.json());
         this._App.use(bodyParser.urlencoded({extended: true}));
-
-        //Lame "Hack" to prepopulate the data if it doesn't exist
-        let database = new Data();
 
     }
 
@@ -40,7 +39,6 @@ export class ServerApp {
         
         //These didn't work as class variables, so had to implement
         //lame work around.
-        let database = new Data();
         let tools = new Tools();
 
         database.getAllData().forEach(function(item) {
@@ -61,10 +59,8 @@ export class ServerApp {
 
     private _AddColor(req: express.Request, res: express.Response) {
         let color = req.body.name;
-        let count = req.body.amount;
+        let count = Number(req.body.amount);
 
-        let database = new Data();
-        
         database.insertData(color, count);
 
         res.send(color + ' ' + count);
