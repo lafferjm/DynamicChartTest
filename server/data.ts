@@ -23,4 +23,8 @@ export class Data {
     public getAllData() {
         return this.colors.find();
     }
+
+    public insertData(name: string, amount: number) {
+        this.colors.insert({color: name, count: amount})
+    }
 }
