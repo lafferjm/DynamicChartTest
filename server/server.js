@@ -1,5 +1,6 @@
 "use strict";
 var express = require("express");
+var bodyParser = require("body-parser");
 var expressPartial = require("express-partials");
 var data_1 = require("./data");
 var tools_1 = require("./tools");
@@ -9,10 +10,14 @@ var ServerApp = (function () {
         this._App.set('view engine', 'ejs');
         this._App.set('views', '../views');
         this._App.use(expressPartial());
+        this._App.use(bodyParser.json());
+        this._App.use(bodyParser.urlencoded({ extended: true }));
+        //Lame "Hack" to prepopulate the data if it doesn't exist
         var database = new data_1.Data();
     }
     ServerApp.prototype.setRoutes = function () {
         this._App.get('/', this._RenderChart);
+        this._App.post('/add', this._AddColor);
     };
     ServerApp.prototype.startServer = function () {
         this._App.listen(5000, function () {
@@ -24,12 +29,8 @@ var ServerApp = (function () {
         var countArray = [];
         var fillColorArray = [];
         var borderColorArray = [];
-        /*
-        colorArray.push("Red");
-        countArray.push(10);
-        fillColorArray.push('rgba(188, 125, 0, 0.2)');
-        borderColorArray.push('rgba(188, 125, 0, 1)');
-        */
+        //These didn't work as class variables, so had to implement
+        //lame work around.
         var database = new data_1.Data();
         var tools = new tools_1.Tools();
         database.getAllData().forEach(function (item) {
@@ -43,6 +44,13 @@ var ServerApp = (function () {
             data: countArray,
             fillColors: fillColorArray,
             borderColors: borderColorArray });
+    };
+    ServerApp.prototype._AddColor = function (req, res) {
+        var color = req.body.name;
+        var count = req.body.amount;
+        var database = new data_1.Data();
+        database.insertData(color, count);
+        res.send(color + ' ' + count);
     };
     return ServerApp;
 }());

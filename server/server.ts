@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as bodyParser from 'body-parser';
 import expressPartial = require('express-partials');
 import {Data} from './data';
 import {Tools} from './tools';
@@ -12,6 +13,8 @@ export class ServerApp {
         this._App.set('view engine', 'ejs');
         this._App.set('views', '../views');
         this._App.use(expressPartial());
+        this._App.use(bodyParser.json());
+        this._App.use(bodyParser.urlencoded({extended: true}));
 
         //Lame "Hack" to prepopulate the data if it doesn't exist
         let database = new Data();
@@ -20,6 +23,7 @@ export class ServerApp {
 
     public setRoutes() {
         this._App.get('/', this._RenderChart);
+        this._App.post('/add', this._AddColor);
     }
 
     public startServer() {
@@ -53,5 +57,16 @@ export class ServerApp {
                             data: countArray,
                             fillColors: fillColorArray,
                             borderColors: borderColorArray});
+    }
+
+    private _AddColor(req: express.Request, res: express.Response) {
+        let color = req.body.name;
+        let count = req.body.amount;
+
+        let database = new Data();
+        
+        database.insertData(color, count);
+
+        res.send(color + ' ' + count);
     }
 }

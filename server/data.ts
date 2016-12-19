@@ -8,6 +8,7 @@ export class Data {
     constructor() {
         this.database = new loki('test.db');
         this.colors = this.database.getCollection('colors');
+        
         if(!this.colors) {
             this.colors = this.database.addCollection('colors');
             this.colors.insert({color: "Red", count: 12});
@@ -18,6 +19,7 @@ export class Data {
             this.colors.insert({color: "Orange", count: 3});
         }
         this.database.saveDatabase();
+        
     }
 
     public getAllData() {
@@ -25,6 +27,7 @@ export class Data {
     }
 
     public insertData(name: string, amount: number) {
-        this.colors.insert({color: name, count: amount})
+        this.colors.insert({color: name, count: amount});
+        this.database.save();
     }
 }

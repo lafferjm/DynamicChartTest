@@ -18,6 +18,10 @@ var Data = (function () {
     Data.prototype.getAllData = function () {
         return this.colors.find();
     };
+    Data.prototype.insertData = function (name, amount) {
+        this.colors.insert({ color: name, count: amount });
+        this.database.save();
+    };
     return Data;
 }());
 exports.Data = Data;
